@@ -1,0 +1,28 @@
+@startuml development-process
+
+rectangle "local development & local testing" as local
+
+cloud "github" {
+    rectangle "push to feature branch & create pull request" as featureBranch
+    rectangle "push to master" as master
+}
+
+cloud "github actions" {
+    rectangle "build & deploy to dev" as dev
+    rectangle "functional testing on dev" as devTest
+    rectangle "deploy to prod" as prod
+}
+
+cloud "AWS Dev" as awsDev
+
+cloud "AWS Prod" as awsProd
+
+local -down-> featureBranch
+featureBranch -> master
+master -down-> dev
+dev -down-> awsDev
+dev -> devTest
+devTest -> prod
+prod -down-> awsProd
+
+@enduml

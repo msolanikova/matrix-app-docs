@@ -1,0 +1,15 @@
+@startuml login
+
+actor User
+autonumber
+participant "AWS Cognito built-in UI" as UI #cccccc
+participant "AWS Cognito OAuth 2.0 service" as Cognito #cccccc
+
+User -> UI: username/password
+UI -> Cognito: credentials
+Cognito -> UI: ok, tokens
+UI -> Frontend: tokens: id, refresh, access
+Frontend -> Middleware: id token (JWT) in Authorization header
+Middleware -> Frontend: data
+
+@enduml

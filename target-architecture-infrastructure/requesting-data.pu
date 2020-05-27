@@ -1,0 +1,16 @@
+@startuml requesting-data
+
+autonumber
+
+participant Frontend
+participant "API Gateway" as APIGateway #cccccc
+participant "AWS Cognito OAuth 2.0 service" as Cognito #cccccc
+
+Frontend -> APIGateway: id token (JWT) in Authorization header
+APIGateway -> Cognito: id token (JWT)
+Cognito -> APIGateway: ok
+APIGateway -> Middleware: id token (JWT) in Authorization header 
+Middleware -> APIGateway: data
+APIGateway -> Frontend: data
+
+@enduml

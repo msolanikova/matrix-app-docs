@@ -1,0 +1,31 @@
+@startuml invalid-token
+
+autonumber
+
+actor User
+participant Frontend
+participant "API Gateway" as APIGateway #cccccc
+participant "AWS Cognito OAuth 2.0 service" as Cognito #cccccc
+participant Middleware
+
+== Data request with expired id token ==
+Frontend -> APIGateway: id token
+APIGateway -> Cognito: is id token valid?
+Cognito -> APIGateway: no
+APIGateway -> Frontend: HTTP 401 Unauthorized
+Frontend -> Cognito: expired id token with refresh token
+Cognito -> Frontend: valid id token
+Frontend -> APIGateway: valid id token
+APIGateway -> Cognito: is id token valid?
+Cognito -> APIGateway: yes
+APIGateway -> Middleware: id token (JWT) in Authorization header
+Middleware -> APIGateway: data
+APIGateway -> Frontend: data
+
+== Data request with invalid id token ==
+Frontend -> APIGateway: id token
+APIGateway -> Cognito: is id token valid?
+Cognito -> APIGateway: no
+APIGateway -> Frontend: HTTP 403 Forbidden or HTTP 500
+
+@enduml
